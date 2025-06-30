@@ -1,5 +1,13 @@
 # authentication
 
+## 다른 서비스에서 유저 검증하는 방법
+k8s config map이 띄워져 있어야 합니다. 방법 추후 수정(현재는 공통 jwt.env 파일 사용)
+```
+kubectl create configmap jwt-config --from-env-file=jwt.env
+```
+
+디플로이먼트에는는
+
 ## Running in local development environment
 
 ```

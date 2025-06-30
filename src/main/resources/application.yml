@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: authentication
+
+# JWT 설정 (환경변수로 덮어쓰기 가능)
+jwt:
+  secret: ${JWT_SECRET:defaultTestSecretKeyForDevelopmentOnly123456789}
+  expiration: ${JWT_EXPIRATION:86400000}
 ---
 
 spring:

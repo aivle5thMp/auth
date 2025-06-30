@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-@RequestMapping(value="/users")
+@RequestMapping(value="/auth")
 @Transactional
 public class UserController {
 

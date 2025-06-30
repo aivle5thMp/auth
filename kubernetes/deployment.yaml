@@ -19,6 +19,9 @@ spec:
           image: "upzs/aivle12-auth:latest"
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: jwt-config
           readinessProbe:
             httpGet:
               path: '/actuator/health'
