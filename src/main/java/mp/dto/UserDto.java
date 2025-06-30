@@ -1,5 +1,7 @@
 package mp.dto;
 
+import java.util.UUID;
+
 public class UserDto {
     
     // Request DTOs
@@ -30,15 +32,15 @@ public class UserDto {
     
     // Response DTOs
     public static class UserInfo {
-        private Long userId;
+        private UUID userId;
         private String name;
         private String email;
         private String role;
         private Boolean isSubscribed;
         
         // Getters and Setters
-        public Long getUserId() { return userId; }
-        public void setUserId(Long userId) { this.userId = userId; }
+        public UUID getUserId() { return userId; }
+        public void setUserId(UUID userId) { this.userId = userId; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
         public String getEmail() { return email; }
@@ -72,5 +74,21 @@ public class UserDto {
         public void setUser(UserInfo user) { this.user = user; }
         public AuthInfo getAuth() { return auth; }
         public void setAuth(AuthInfo auth) { this.auth = auth; }
+    }
+    
+    public static class RegisterResponse {
+        private boolean success;
+        private String message;
+        
+        public RegisterResponse(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+        
+        // Getters and Setters
+        public boolean isSuccess() { return success; }
+        public void setSuccess(boolean success) { this.success = success; }
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
     }
 } 

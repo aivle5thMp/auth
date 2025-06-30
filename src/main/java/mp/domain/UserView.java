@@ -3,6 +3,7 @@ package mp.domain;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
 
@@ -14,7 +15,8 @@ public class UserView {
 
     @Id
     //@GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String name;
     private String password;

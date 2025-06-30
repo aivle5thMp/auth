@@ -1,6 +1,7 @@
 package mp.domain;
 
-import java.util.*;
+import java.util.Date;
+import java.util.UUID;
 import lombok.*;
 import mp.domain.*;
 import mp.infra.AbstractEvent;
@@ -9,8 +10,8 @@ import mp.infra.AbstractEvent;
 @ToString
 public class Subscribed extends AbstractEvent {
 
-    private Long id;
-    private String userId;
+    private UUID id;
+    private UUID userId;
     private String item;
     private Long amount;
     private String status;

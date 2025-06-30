@@ -1,15 +1,18 @@
 package mp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
 import mp.AuthenticationApplication;
 import mp.domain.Registered;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "User_table")
@@ -18,13 +21,19 @@ import mp.domain.Registered;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String name;
 
     private String email;
 
+    @JsonIgnore
     private String password;
 
     private String role;

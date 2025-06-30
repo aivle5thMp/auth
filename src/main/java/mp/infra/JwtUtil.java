@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class JwtUtil {
@@ -20,7 +21,7 @@ public class JwtUtil {
     
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", user.getId());
+        claims.put("sub", user.getId().toString());
         claims.put("role", user.getRole());
         claims.put("is_subscribed", user.getIsSubscribed());
         
@@ -40,8 +41,9 @@ public class JwtUtil {
                 .getBody();
     }
     
-    public Long extractUserId(String token) {
-        return extractAllClaims(token).get("sub", Long.class);
+    public UUID extractUserId(String token) {
+        String userIdString = extractAllClaims(token).get("sub", String.class);
+        return UUID.fromString(userIdString);
     }
     
     public String extractRole(String token) {

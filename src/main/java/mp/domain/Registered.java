@@ -11,7 +11,7 @@ import mp.infra.AbstractEvent;
 @ToString
 public class Registered extends AbstractEvent {
 
-    private Long id;
+    private UUID id;
     private String name;
     private String email;
     private String password;
