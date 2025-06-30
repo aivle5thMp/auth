@@ -8,10 +8,13 @@ import javax.transaction.Transactional;
 import mp.domain.*;
 import mp.dto.UserDto;
 import mp.exception.UserException;
+import mp.dto.ErrorResponse;
 import mp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,11 +79,25 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable UUID id) {
-        Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
+        // 현재 인증된 사용자의 ID 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID currentUserId = (UUID) authentication.getPrincipal();
+        
+        // 요청한 ID가 현재 사용자의 ID와 같거나 ADMIN 역할을 가진 경우에만 조회 허용
+        if (currentUserId.equals(id) || authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            Optional<User> user = userService.findById(id);
+            if (user.isPresent()) {
+                return ResponseEntity.ok(user.get());
+            } else {
+                throw new UserException.UserNotFoundException("사용자를 찾을 수 없습니다.");
+            }
         } else {
-            throw new UserException.UserNotFoundException("사용자를 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(), 
+                    "FORBIDDEN", 
+                    "자신의 정보만 조회할 수 있습니다.",
+                    "/auth/" + id));
         }
     }
 
