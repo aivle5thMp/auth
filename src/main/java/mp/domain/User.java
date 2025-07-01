@@ -1,12 +1,6 @@
 package mp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
@@ -60,6 +54,9 @@ public class User {
             if ("COMPLETED".equals(subscribed.getStatus())) {
                 user.setIsSubscribed(true);
                 repository().save(user);
+                System.out.println("✓ User " + user.getEmail() + " subscription completed");
+            } else {
+                System.out.println("ℹ User " + user.getEmail() + " subscription status: " + subscribed.getStatus());
             }
         });
     }
@@ -68,10 +65,12 @@ public class User {
     //<<< Clean Arch / Port Method
     public static void statusChanged(AuditCompleted auditCompleted) {
         repository().findById(auditCompleted.getUserId()).ifPresent(user -> {
-            // 심사가 승인되고 구독 중인 경우에만 AUTHOR로 변경
             if ("APPROVED".equals(auditCompleted.getStatus())) {
                 user.setRole("AUTHOR");
                 repository().save(user);
+                System.out.println("✓ User " + user.getEmail() + " promoted to AUTHOR role");
+            } else {
+                System.out.println("ℹ User " + user.getEmail() + " audit status: " + auditCompleted.getStatus());
             }
         });
     }

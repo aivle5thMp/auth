@@ -1,9 +1,7 @@
 package mp.domain;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.UUID;
 import lombok.*;
-import mp.domain.*;
 import mp.infra.AbstractEvent;
 
 //<<< DDD / Domain Event
