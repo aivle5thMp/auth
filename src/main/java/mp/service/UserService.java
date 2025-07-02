@@ -10,6 +10,7 @@ import mp.domain.User;
 import mp.domain.UserRepository;
 import mp.infra.JwtUtil;
 import mp.exception.UserException;
+import mp.domain.UserRole;
 
 @Service
 @Transactional
@@ -45,7 +46,7 @@ public class UserService {
         
         // 기본값 설정
         if (user.getRole() == null) {
-            user.setRole("USER");
+            user.setRole(UserRole.USER);
         }
         
         if (user.getIsSubscribed() == null) {

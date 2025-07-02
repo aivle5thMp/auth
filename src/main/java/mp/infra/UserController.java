@@ -63,7 +63,7 @@ public class UserController {
         userInfo.setUserId(user.getId());
         userInfo.setName(user.getName());
         userInfo.setEmail(user.getEmail());
-        userInfo.setRole(user.getRole());
+        userInfo.setRole(user.getRole().name());
         userInfo.setIsSubscribed(user.getIsSubscribed());
         response.setUser(userInfo);
         

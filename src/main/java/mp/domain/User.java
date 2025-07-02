@@ -30,7 +30,9 @@ public class User {
     @JsonIgnore
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role = UserRole.USER;
 
     private Boolean isSubscribed;
 
@@ -66,7 +68,7 @@ public class User {
     public static void statusChanged(AuditCompleted auditCompleted) {
         repository().findById(auditCompleted.getUserId()).ifPresent(user -> {
             if ("APPROVED".equals(auditCompleted.getStatus())) {
-                user.setRole("AUTHOR");
+                user.setRole(UserRole.AUTHOR);
                 repository().save(user);
                 System.out.println("✓ User " + user.getEmail() + " promoted to AUTHOR role");
             } else {

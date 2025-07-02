@@ -16,14 +16,12 @@ spring:
     username: sa
     password:
 
-# JWT 설정 (환경변수로 덮어쓰기 가능)
-jwt:
-  secret: ${JWT_SECRET:defaultTestSecretKeyForDevelopmentOnly123456789}
-  expiration: ${JWT_EXPIRATION:86400000}
 ---
 
 spring:
-  profiles: default
+  config:
+    activate:
+      on-profile: default
   jpa:
     properties:
       hibernate:
@@ -44,16 +42,18 @@ spring:
                 value:
                   serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       bindings:
-        event-in:
+        # 구독할 토픽들 (Consumer)
+        author-review-in:
           group: authentication
-#<<< EDA / Topic Name
-          destination: mp
-#>>> EDA / Topic Name
+          destination: author.review.v1
           contentType: application/json
-        event-out:
-#<<< EDA / Topic Name
-          destination: mp
-#>>> EDA / Topic Name
+        payment-subscription-in:
+          group: authentication
+          destination: payment.subscription.v1
+          contentType: application/json
+        # 발행할 토픽 (Producer)
+        user-signup-out:
+          destination: user.signup.v1
           contentType: application/json
 
 logging:
@@ -68,7 +68,9 @@ server:
 ---
 
 spring:
-  profiles: docker
+  config:
+    activate:
+      on-profile: docker
   jpa:
     properties:
       hibernate:
@@ -88,13 +90,20 @@ spring:
                   serde: org.apache.kafka.common.serialization.Serdes$StringSerde
                 value:
                   serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+
       bindings:
-        event-in:
+        # 구독할 토픽들 (Consumer)
+        author-review-in:
           group: authentication
-          destination: mp
+          destination: author.review.v1
           contentType: application/json
-        event-out:
-          destination: mp
+        payment-subscription-in:
+          group: authentication
+          destination: payment.subscription.v1
+          contentType: application/json
+        # 발행할 토픽 (Producer)
+        user-signup-out:
+          destination: user.signup.v1
           contentType: application/json
 
 

@@ -35,7 +35,7 @@ public class AbstractEvent {
         KafkaProcessor processor = AuthenticationApplication.applicationContext.getBean(
             KafkaProcessor.class
         );
-        MessageChannel outputChannel = processor.outboundTopic();
+        MessageChannel outputChannel = processor.userSignupOut();
 
         outputChannel.send(
             MessageBuilder

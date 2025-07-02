@@ -21,7 +21,7 @@ public class PolicyHandler {
     UserRepository userRepository;
 
     @StreamListener(
-        value = KafkaProcessor.INPUT,
+        value = KafkaProcessor.PAYMENT_SUBSCRIPTION_IN,
         condition = "headers['type']=='Subscribed'"
     )
     public void wheneverSubscribed_UpdateSubscriptionStatus(
@@ -37,7 +37,7 @@ public class PolicyHandler {
     }
 
     @StreamListener(
-        value = KafkaProcessor.INPUT,
+        value = KafkaProcessor.AUTHOR_REVIEW_IN,
         condition = "headers['type']=='AuditCompleted'"
     )
     public void wheneverAuditCompleted_PromoteToAuthor(
