@@ -1,4 +1,4 @@
-package mp.infra;
+package mp.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -30,7 +30,7 @@ public class JwtUtil {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", user.getId().toString());
-        claims.put("role", user.getRole());
+        claims.put("role", user.getRole().name());
         claims.put("is_subscribed", user.getIsSubscribed());
         
         return Jwts.builder()

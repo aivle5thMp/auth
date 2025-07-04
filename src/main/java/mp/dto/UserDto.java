@@ -29,6 +29,14 @@ public class UserDto {
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
     }
+
+    public static class RefreshRequest {
+        private String token;
+        
+        // Getters and Setters
+        public String getToken() { return token; }
+        public void setToken(String token) { this.token = token; }
+    }
     
     // Response DTOs
     public static class UserInfo {
@@ -53,12 +61,15 @@ public class UserDto {
     
     public static class AuthInfo {
         private String accessToken;
+        private String refreshToken;
         private String tokenType;
         private Integer expiresIn;
         
         // Getters and Setters
         public String getAccessToken() { return accessToken; }
         public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
+        public String getRefreshToken() { return refreshToken; }
+        public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
         public String getTokenType() { return tokenType; }
         public void setTokenType(String tokenType) { this.tokenType = tokenType; }
         public Integer getExpiresIn() { return expiresIn; }
@@ -72,6 +83,14 @@ public class UserDto {
         // Getters and Setters
         public UserInfo getUser() { return user; }
         public void setUser(UserInfo user) { this.user = user; }
+        public AuthInfo getAuth() { return auth; }
+        public void setAuth(AuthInfo auth) { this.auth = auth; }
+    }
+
+    public static class RefreshResponse {
+        private AuthInfo auth;
+        
+        // Getters and Setters
         public AuthInfo getAuth() { return auth; }
         public void setAuth(AuthInfo auth) { this.auth = auth; }
     }

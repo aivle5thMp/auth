@@ -13,11 +13,10 @@ import mp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import mp.util.UserHeaderUtil;
 
 //<<< Clean Arch / Inbound Adaptor
 
@@ -49,7 +48,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto.LoginRequest loginRequest) {
-        String token = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        UserDto.AuthInfo authInfo = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         
         // 사용자 정보 조회
         Optional<User> userOpt = userService.findByEmail(loginRequest.getEmail());
@@ -68,24 +67,28 @@ public class UserController {
         response.setUser(userInfo);
         
         // 인증 정보
-        UserDto.AuthInfo authInfo = new UserDto.AuthInfo();
-        authInfo.setAccessToken(token);
-        authInfo.setTokenType("Bearer");
-        authInfo.setExpiresIn(3600); // 24시간을 초 단위로
+        response.setAuth(authInfo);
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody UserDto.RefreshRequest request) {
+        UserDto.AuthInfo authInfo = userService.refreshToken(request.getToken());
+        
+        UserDto.RefreshResponse response = new UserDto.RefreshResponse();
         response.setAuth(authInfo);
         
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable UUID id) {
+    public ResponseEntity<?> getUser(@PathVariable UUID id, HttpServletRequest request) {
         // 현재 인증된 사용자의 ID 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID currentUserId = (UUID) authentication.getPrincipal();
+        UUID currentUserId = UserHeaderUtil.getUserId(request);
         
         // 요청한 ID가 현재 사용자의 ID와 같거나 ADMIN 역할을 가진 경우에만 조회 허용
-        if (currentUserId.equals(id) || authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        if (currentUserId.equals(id) || UserHeaderUtil.isAdmin(request)) {
             Optional<User> user = userService.findById(id);
             if (user.isPresent()) {
                 return ResponseEntity.ok(user.get());

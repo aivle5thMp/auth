@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+# JWT 설정 추가
+jwt:
+  secret: ${JWT_SECRET:mySecretKey1234567890123456789012345678901234567890}
+  expiration: 86400000
+
 spring:
   application:
     name: authentication
@@ -17,56 +22,6 @@ spring:
     password:
 
 ---
-
-spring:
-  config:
-    activate:
-      on-profile: default
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: localhost:9092
-        streams:
-          binder:
-            configuration:
-              default:
-                key:
-                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-                value:
-                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-      bindings:
-        # 구독할 토픽들 (Consumer)
-        author-review-in:
-          group: authentication
-          destination: author.review.v1
-          contentType: application/json
-        payment-subscription-in:
-          group: authentication
-          destination: payment.subscription.v1
-          contentType: application/json
-        # 발행할 토픽 (Producer)
-        user-signup-out:
-          destination: user.signup.v1
-          contentType: application/json
-
-logging:
-  level:
-    org.hibernate.type: trace
-    org.springframework.cloud: debug
-
-
-server:
-  port: 8085
-
----
-
 spring:
   config:
     activate:
